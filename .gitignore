@@ -1,0 +1,31 @@
+# Python environments and generated files
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Django runtime data and generated static files
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+*.log
+
+# Editor and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local assignment reference and submission exports
+*.bundle
