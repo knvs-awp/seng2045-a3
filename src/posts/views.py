@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Post
 from django.http import JsonResponse
+from .forms import PostForm
+from profiles.models import Profile
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 # Create your views here.
@@ -10,8 +12,19 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 # https://docs.djangoproject.com/en/5.2/howto/csrf/
 @ensure_csrf_cookie
 def post_list_and_create(request):
+    form = PostForm(request.POST or None)
     qs = Post.objects.all()
-    return render(request, 'posts/main.html', {'qs': qs})
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        if form.is_valid():
+            author = Profile.objects.get(user=request.user)
+            instance = form.save(commit=False)
+            instance.author = author
+            instance.save()
+    context = {
+        'form': form,
+    }
+    return render(request, 'posts/main.html', context)
 
 
 def load_post_data_view(request, num_posts):
