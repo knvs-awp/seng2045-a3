@@ -26,10 +26,9 @@ $.ajax({
             spinnerBox.classList.add('not-visible')
             console.log(data)
             data.forEach(el => {
-                const title = document.createTextNode(`${el.title} - `)
-                const body = document.createElement('b')
-                body.textContent = el.body
-                postsBox.append(title, body, document.createElement('br'))
+                postsBox.innerHTML += `
+                    ${el.title} - <b>${el.body}</b><br>
+                `
             })
         }, 100)
     },
