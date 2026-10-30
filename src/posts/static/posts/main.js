@@ -2,6 +2,7 @@ console.log('hello world')
 
 const helloWorldBox = document.getElementById('hello-world')
 const postsBox = document.getElementById('posts-box')
+const spinnerBox = document.getElementById('spinner-box')
 
 $.ajax({
     type: 'GET',
@@ -21,15 +22,19 @@ $.ajax({
     success: function(response){
         console.log(response)
         const data = response.data
-        console.log(data)
-        data.forEach(el => {
-            const title = document.createTextNode(`${el.title} - `)
-            const body = document.createElement('b')
-            body.textContent = el.body
-            postsBox.append(title, body, document.createElement('br'))
-        })
+        setTimeout(() => {
+            spinnerBox.classList.add('not-visible')
+            console.log(data)
+            data.forEach(el => {
+                const title = document.createTextNode(`${el.title} - `)
+                const body = document.createElement('b')
+                body.textContent = el.body
+                postsBox.append(title, body, document.createElement('br'))
+            })
+        }, 100)
     },
     error: function(error){
+        spinnerBox.classList.add('not-visible')
         console.log(error)
     }
 })
