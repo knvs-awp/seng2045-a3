@@ -6,6 +6,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 # Create your views here.
 
 
+# Set the CSRF cookie for forms generated in JavaScript.
+# https://docs.djangoproject.com/en/5.2/howto/csrf/
 @ensure_csrf_cookie
 def post_list_and_create(request):
     qs = Post.objects.all()

@@ -5,6 +5,8 @@ const spinnerBox = document.getElementById('spinner-box')
 const loadBtn = document.getElementById('load-btn')
 const endBox = document.getElementById('end-box')
 
+// Adapted from Django's AJAX CSRF example:
+// https://docs.djangoproject.com/en/5.2/howto/csrf/
 function getCookie(name) {
     let cookieValue = null
     if (document.cookie && document.cookie !== '') {
