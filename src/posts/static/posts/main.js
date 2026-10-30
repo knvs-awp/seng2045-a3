@@ -1,6 +1,7 @@
 console.log('hello world')
 
 const helloWorldBox = document.getElementById('hello-world')
+const postsBox = document.getElementById('posts-box')
 
 $.ajax({
     type: 'GET',
@@ -11,5 +12,24 @@ $.ajax({
     },
     error: function(error){
         console.log('error', error)
+    }
+})
+
+$.ajax({
+    type: 'GET',
+    url: '/data/',
+    success: function(response){
+        console.log(response)
+        const data = response.data
+        console.log(data)
+        data.forEach(el => {
+            const title = document.createTextNode(`${el.title} - `)
+            const body = document.createElement('b')
+            body.textContent = el.body
+            postsBox.append(title, body, document.createElement('br'))
+        })
+    },
+    error: function(error){
+        console.log(error)
     }
 })
