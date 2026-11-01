@@ -63,7 +63,8 @@ def delete_post(request, pk):
     obj = Post.objects.get(pk=pk)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         obj.delete()
-    return JsonResponse({})
+        return JsonResponse({'msg': 'some message'})
+    return JsonResponse({'msg': 'access denied - ajax only'})
 
 
 def image_upload_view(request):
