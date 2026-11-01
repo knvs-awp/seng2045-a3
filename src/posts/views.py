@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Post, Photo
 from django.http import JsonResponse, HttpResponse
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from profiles.models import Profile
 from django.views.decorators.csrf import ensure_csrf_cookie
 from .utils import action_permission
@@ -40,10 +40,20 @@ def post_list_and_create(request):
 def post_detail(request, pk):
     obj = Post.objects.get(pk=pk)
     form = PostForm()
+    comment_form = CommentForm(request.POST if request.method == 'POST' else None, prefix='comment')
+
+    if request.method == 'POST' and comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.post = obj
+        comment.author = Profile.objects.get(user=request.user)
+        comment.save()
+        return redirect('posts:post-detail', pk=obj.pk)
 
     context = {
         'obj': obj,
         'form': form,
+        'comment_form': comment_form,
+        'comments': obj.comments.select_related('author__user'),
     }
 
     return render(request, 'posts/detail.html', context)
