@@ -14,7 +14,7 @@ const url = window.location.href
 
 const dropzone = document.getElementById('my-dropzone')
 const addBtn = document.getElementById('add-btn')
-const closeBtns = [...document.getElementsByClassName('add-modal-close')]
+const addPostModal = document.getElementById('addPostModal')
 
 console.log('csrf', csrf[0].value)
 
@@ -126,6 +126,8 @@ loadBtn.addEventListener('click', () => {
 let newPostId = null
 postForm.addEventListener('submit', e => {
     e.preventDefault()
+    if (addBtn.disabled) return
+    addBtn.disabled = true
 
     $.ajax({
         type: 'POST',
@@ -138,6 +140,8 @@ postForm.addEventListener('submit', e => {
         success: function(response){
             console.log(response)
             newPostId = response.id
+            addBtn.disabled = false
+            dropzone.classList.remove('not-visible')
             postsBox.insertAdjacentHTML('afterbegin', `
                 <div class="card mb-2">
                     <div class="card-body">
@@ -165,23 +169,22 @@ postForm.addEventListener('submit', e => {
         },
         error: function(error){
             console.log(error)
+            addBtn.disabled = false
             handleAlerts('danger', 'ups...something went wrong')
         }
     })
 })
 
-addBtn.addEventListener('click', () => {
-    dropzone.classList.remove('not-visible')
-})
-
-closeBtns.forEach(btn => btn.addEventListener('click', () => {
+addPostModal.addEventListener('hidden.bs.modal', () => {
     postForm.reset()
     if (!dropzone.classList.contains('not-visible')) {
         dropzone.classList.add('not-visible')
     }
     const myDropzone = Dropzone.forElement('#my-dropzone')
     myDropzone.removeAllFiles(true)
-}))
+    newPostId = null
+    addBtn.disabled = false
+})
 
 Dropzone.autoDiscover = false
 const myDropzone = new Dropzone('#my-dropzone', {
