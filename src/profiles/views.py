@@ -19,6 +19,7 @@ def my_profile_view(request):
                 'avatar': instance.avatar.url,
                 'user': instance.user.username,
             })
+        return JsonResponse({'errors': form.errors}, status=400)
     context = {
         'obj': obj,
         'form': form,

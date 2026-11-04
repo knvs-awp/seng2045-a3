@@ -1,19 +1,32 @@
 const avatarBox = document.getElementById('avatar-box')
 const alertBox = document.getElementById('alert-box')
 const profileForm = document.getElementById('profile-form')
-const csrf = document.getElementsByName('csrfmiddlewaretoken')
+const currentAvatar = document.getElementById('current-avatar')
+const saveBtn = profileForm.querySelector('button[type="submit"]')
 
 const bioInput = document.getElementById('id_bio')
-console.log(bioInput)
 const avatarInput = document.getElementById('id_avatar')
+
+avatarInput.addEventListener('change', () => {
+    const file = avatarInput.files[0]
+    if (!file) {
+        avatarBox.querySelector('img').src = currentAvatar.href
+        return
+    }
+    const reader = new FileReader()
+    reader.addEventListener('load', () => {
+        avatarBox.querySelector('img').src = reader.result
+    })
+    reader.readAsDataURL(file)
+})
 
 profileForm.addEventListener('submit', e => {
     e.preventDefault()
+    if (saveBtn.disabled) return
+    saveBtn.disabled = true
+    alertBox.innerHTML = ''
 
-    const formData = new FormData()
-    formData.append('csrfmiddlewaretoken', csrf[0].value)
-    formData.append('bio', bioInput.value)
-    formData.append('avatar', avatarInput.files[0])
+    const formData = new FormData(profileForm)
 
     $.ajax({
         type: 'POST',
@@ -21,15 +34,17 @@ profileForm.addEventListener('submit', e => {
         enctype: 'multipart/form-data',
         data: formData,
         success: function(response){
-            console.log(response)
-            avatarBox.innerHTML = `
-                <img src="${response.avatar}" class="rounded" height="200px" width="auto" alt="${response.user}">
-            `
+            avatarBox.querySelector('img').src = response.avatar
+            currentAvatar.href = response.avatar
+            avatarInput.value = ''
             bioInput.value = response.bio
-            handleAlerts('success', 'your profile has been updated!')
+            handleAlerts('success', 'Your profile has been updated.')
         },
         error: function(error){
-            console.log(error)
+            handleAlerts('danger', 'Your profile could not be saved. Check the image and try again.')
+        },
+        complete: function(){
+            saveBtn.disabled = false
         },
         processData: false,
         contentType: false,

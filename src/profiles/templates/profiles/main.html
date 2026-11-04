@@ -12,21 +12,27 @@ my profile
 
 {% block content %}
     <div class="profile-panel mx-auto">
-        <div id="alert-box"></div>
         <div class="border rounded-3 p-4 p-md-5">
             <h3 class="mb-4 text-break">{{obj.user}}</h3>
-            <div class="row g-4">
-                <div class="col-md-4 text-center" id="avatar-box">
-                    <img src="{{obj.avatar.url}}" class="rounded" height="200px" width="auto" alt="{{obj.user.username}}">
+            <form id="profile-form">
+                {% csrf_token %}
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <div class="text-center mb-3" id="avatar-box">
+                            <img src="{{obj.avatar.url}}" class="rounded" height="160" width="160" alt="{{obj.user.username}}">
+                        </div>
+                        {{form.avatar|as_crispy_field}}
+                        <a id="current-avatar" class="small" href="{{obj.avatar.url}}" target="_blank" rel="noopener">View saved avatar</a>
+                    </div>
+                    <div class="col-md-7">
+                        {{form.bio|as_crispy_field}}
+                    </div>
                 </div>
-                <div class="col-md-8">
-                    <form id="profile-form">
-                        {% csrf_token %}
-                        {{form|crispy}}
-                        <button type="submit" class="btn btn-primary mt-2 px-4">Save</button>
-                    </form>
+                <div class="d-flex justify-content-end border-top pt-3 mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Save</button>
                 </div>
-            </div>
+                <div id="alert-box" class="mt-3" aria-live="polite"></div>
+            </form>
         </div>
     </div>
 {% endblock content %}
