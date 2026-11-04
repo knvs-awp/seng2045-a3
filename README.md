@@ -40,17 +40,22 @@ The account was created in Supabase and could then sign in to the Vercel app's `
 
 Vercel runs Django, Supabase stores the database and images, and Django handles login.
 
-1. Created a Supabase project and selected **Transaction pooler** under **Connect**, using its PostgreSQL URI on port `6543` because Vercel runs serverless functions.
-2. Created a public Storage bucket named `media` and uploaded the default `avatar.png` image.
-3. Generated S3 credentials so Django could upload photos and avatars to Supabase Storage.
-4. Saved the connection values and Django secret key in `.env.local`, keeping the actual credentials out of Git and placeholders in `.env.example`.
-5. Ran migrations to create the hosted tables and set up a Django admin account with its associated profile.
+### Supabase setup
 
-I enabled Row Level Security (RLS) and removed public Data API access to the Django tables because the app accesses them through Django's server connection.
+1. Created a Supabase project and used its transaction-pooler connection URI on port `6543`.
+2. Created a public `media` bucket, uploaded the default `avatar.png`, and generated S3 credentials for Django uploads.
+3. Saved the database and storage connection values and Django secret key in `.env.local`, with placeholders in `.env.example` and real credentials excluded from Git.
+4. Ran Django migrations to create the tables and created the first admin account against the hosted database.
+5. Enabled Row Level Security (RLS) and removed public Data API access to the Django tables, because the app uses Django's server connection.
 
-## Vercel deployment
+### Vercel deployment
 
-I completed most of the setup on the Vercel website by linking GitHub and importing the repository, selecting the repository root and **Django** framework, and adding the values from `.env.local` to the Production environment variables.
+I completed most of the setup on the Vercel website:
+
+1. Linked GitHub and imported the repository.
+2. Selected the Django framework and kept the root directory at the repository root.
+3. Copied the values from `.env.local` into the project's production environment variables.
+4. Deployed the app, with migrations run through `vercel.json` and static files collected by Vercel.
 
 I also tried deploying manually through the terminal, so the commands below are included for deploying without switching back and forth to the website.
 
