@@ -56,7 +56,7 @@
 
     <!-- carousel -->
     {% if obj.get_photos %}
-        <div id="carouselExampleControls" class="carousel slide mb-2" data-bs-ride="carousel">
+        <div id="carouselExampleControls" class="carousel slide mb-4" data-bs-ride="carousel">
             <div class="carousel-inner">
                 {% for p in obj.get_photos %}
                     <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
@@ -74,22 +74,24 @@
             </button>
         </div>
     {% else %}
-        <div class="mt-2 mb-2">No photos to show</div>
+        <div class="text-muted mb-4">No photos to show</div>
     {% endif %}
 
-    <a href="{% url 'posts:main-board' %}" id="back-btn" class="btn btn-info">back</a>
-    <button id="update-btn" class="btn btn-primary not-visible" data-bs-toggle="modal" data-bs-target="#updateModal">update</button>
-    <button id="delete-btn" class="btn btn-danger not-visible" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</button>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <a href="{% url 'posts:main-board' %}" id="back-btn" class="btn btn-info">back</a>
+        <button id="update-btn" class="btn btn-primary not-visible" data-bs-toggle="modal" data-bs-target="#updateModal">update</button>
+        <button id="delete-btn" class="btn btn-danger not-visible" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</button>
+    </div>
     <div id="spinner-box" class="text-center">
         <div class="spinner-border" role="status"></div>
     </div>
     <div class="mt-1" id="post-box"></div>
 
-    <hr>
+    <hr class="my-4">
     <section id="comments" class="mt-3">
-        <h4>Comments ({{comments|length}})</h4>
+        <h4 class="mb-3">Comments ({{comments|length}})</h4>
         {% for comment in comments %}
-            <div class="card mb-2">
+            <div class="card mb-3">
                 <div class="card-body">
                     <strong>{{comment.author.user.username}}</strong>
                     <small class="text-muted ms-2">{{comment.created|date:"M j, Y, g:i a"}}</small>
@@ -99,7 +101,7 @@
         {% empty %}
             <p class="text-muted">No comments yet. Be the first to comment.</p>
         {% endfor %}
-        <form method="post" action="{% url 'posts:post-detail' obj.pk %}" id="comment-form">
+        <form method="post" action="{% url 'posts:post-detail' obj.pk %}" id="comment-form" class="mt-4">
             {% csrf_token %}
             {{comment_form|crispy}}
             <button type="submit" class="btn btn-primary">add comment</button>

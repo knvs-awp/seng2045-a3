@@ -78,17 +78,17 @@ const getData = () => {
                 console.log(data)
                 data.forEach(el => {
                     postsBox.innerHTML += `
-                        <div class="card mb-2">
+                        <div class="card mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">${el.title}</h5>
                                 <p class="card-text">${el.body}</p>
                             </div>
                             <div class="card-footer">
-                                <div class="row">
-                                    <div class="col-2">
+                                <div class="row g-2">
+                                    <div class="col-auto">
                                         <a href="${url}${el.id}" class="btn btn-primary">Details</a>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-auto">
                                         <form class="like-unlike-forms" data-form-id="${el.id}">
                                             <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                                             <button type="submit" class="btn btn-primary" id="like-unlike-${el.id}">${el.liked ? `Unlike (${el.count})` : `Like (${el.count})`}</button>
@@ -143,17 +143,17 @@ postForm.addEventListener('submit', e => {
             addBtn.disabled = false
             dropzone.classList.remove('not-visible')
             postsBox.insertAdjacentHTML('afterbegin', `
-                <div class="card mb-2">
+                <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">${response.title}</h5>
                         <p class="card-text">${response.body}</p>
                     </div>
                     <div class="card-footer">
-                        <div class="row">
-                            <div class="col-2">
+                        <div class="row g-2">
+                            <div class="col-auto">
                                 <a href="${url}${response.id}" class="btn btn-primary">Details</a>
                             </div>
-                            <div class="col-2">
+                            <div class="col-auto">
                                 <form class="like-unlike-forms" data-form-id="${response.id}">
                                     <button type="submit" class="btn btn-primary" id="like-unlike-${response.id}">Like</button>
                                 </form>
