@@ -104,6 +104,7 @@ WSGI_APPLICATION = 'posts_proj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Use local SQLite when DATABASE_URL is absent.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -111,6 +112,8 @@ DATABASES = {
     }
 }
 
+# Optionally set DATABASE_URL to use the hosted database locally, sharing production data.
+# Local createsuperuser commands then create admins for the deployed app too.
 # Supabase transaction pooling requires prepared statements and server-side cursors disabled.
 if os.environ.get('DATABASE_URL'):
     DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'], ssl_require=True)
@@ -158,10 +161,12 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Uploaded images stay in this local folder when SUPABASE_URL is absent.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Supabase Storage uses the S3-compatible Django storage backend.
+# Setting SUPABASE_URL and its S3 credentials also enables hosted uploads locally.
 # https://supabase.com/docs/guides/storage/s3/authentication
 if os.environ.get('SUPABASE_URL'):
     for variable in ('SUPABASE_S3_ACCESS_KEY_ID', 'SUPABASE_S3_SECRET_ACCESS_KEY', 'SUPABASE_S3_REGION'):

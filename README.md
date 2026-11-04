@@ -20,7 +20,15 @@ python -m venv .venv
 
 Sign in at <http://127.0.0.1:8000/admin/>, then open <http://127.0.0.1:8000/>.
 
-Django uses Supabase when `.env.local` contains the connection values and falls back to SQLite and local images when those values are absent.
+The app can run locally with SQLite and local images, or optionally connect to Supabase through `.env.local`. With the hosted connection values set, local commands use the same database and image storage as the deployed app, so changes affect its data too.
+
+I used this optional connection to test the hosted services locally and create the deployed admin account. With `DATABASE_URL` pointing to the hosted database, the command was:
+
+```powershell
+.\.venv\Scripts\python.exe src/manage.py createsuperuser
+```
+
+The account was created in Supabase and could then sign in to the Vercel app's `/admin/` page without redeploying, because both the local app and Vercel used the same database. Once an admin exists, additional users can be created through Django admin.
 
 ## Hosting setup
 
