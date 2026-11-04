@@ -17,3 +17,8 @@
     max-height: 60vh;
     object-fit: contain;
 }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
