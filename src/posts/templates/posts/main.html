@@ -24,7 +24,7 @@ posts
                     {% csrf_token %}
                     {{form|crispy}}
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger add-modal-close" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-secondary add-modal-close" data-bs-dismiss="modal">Close</button>
                         <button type="submit" id="add-btn" class="btn btn-success">Add</button>
                     </div>
                 </form>
@@ -40,14 +40,14 @@ posts
 </div>
 
 <div id="alert-box"></div>
-<button type="button" class="btn btn-info mb-3" data-bs-toggle="modal" data-bs-target="#addPostModal">
-    add post
+<button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addPostModal">
+    Add post
 </button>
 <div id="posts-box"></div>
 <div id="spinner-box" class="text-center py-3">
     <div class="spinner-border" role="status" aria-label="Loading posts"></div>
 </div>
 <div class="text-center py-3" id="end-box">
-    <button class="btn btn-primary" id="load-btn">Load more</button>
+    <button class="btn btn-outline-secondary" id="load-btn">Load more</button>
 </div>
 {% endblock content %}

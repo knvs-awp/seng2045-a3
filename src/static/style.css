@@ -49,6 +49,39 @@
     margin-bottom: 0.5rem;
 }
 
+.btn:focus:not(:focus-visible) {
+    box-shadow: none;
+}
+
+.btn-like {
+    width: 7.5rem;
+    white-space: nowrap;
+    color: #fff;
+    background-color: #cf3d79;
+    border-color: #cf3d79;
+}
+
+.btn-like:hover,
+.btn-like:active {
+    color: #fff;
+    background-color: #b92f68;
+    border-color: #b92f68;
+}
+
+.btn-like:focus-visible {
+    box-shadow: 0 0 0 0.25rem rgba(157, 23, 77, 0.25);
+}
+
+.btn-success:focus:not(:focus-visible):not(:hover) {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.btn-danger:focus:not(:focus-visible):not(:hover) {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
 .profile-panel {
     max-width: 880px;
 }
