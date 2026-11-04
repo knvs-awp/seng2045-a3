@@ -8,6 +8,11 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 """
 
 import os
+from pathlib import Path
+import sys
+
+# Vercel starts the app from the repository root. Django modules live in src.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from django.core.wsgi import get_wsgi_application
 

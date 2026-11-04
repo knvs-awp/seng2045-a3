@@ -24,6 +24,7 @@ staticfiles/
 # Editor and operating system files
 .idea/
 .vscode/
+.vercel/
 .DS_Store
 Thumbs.db
 

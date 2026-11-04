@@ -10,22 +10,42 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from urllib.parse import urlsplit
+
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR.parent / '.env.local')
+IS_VERCEL = os.environ.get('VERCEL') == '1'
+
+if IS_VERCEL:
+    for variable in ('DJANGO_SECRET_KEY', 'DATABASE_URL', 'SUPABASE_URL'):
+        if not os.environ.get(variable):
+            raise ImproperlyConfigured(f'{variable} is required on Vercel.')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t+sx2x$4v0njcphi!n_8s#k=x##hxu!yup#&1#m$mzxwt7q7g0'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-t+sx2x$4v0njcphi!n_8s#k=x##hxu!yup#&1#m$mzxwt7q7g0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = not IS_VERCEL
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+for variable in ('VERCEL_URL', 'VERCEL_PROJECT_PRODUCTION_URL', 'VERCEL_BRANCH_URL'):
+    if os.environ.get(variable):
+        ALLOWED_HOSTS.append(os.environ[variable])
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
 
 # Application definition
@@ -91,6 +111,12 @@ DATABASES = {
     }
 }
 
+# Supabase transaction pooling requires prepared statements and server-side cursors disabled.
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'], ssl_require=True)
+    DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
+    DATABASES['default']['OPTIONS']['prepare_threshold'] = None
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -129,13 +155,37 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'posts' / 'static',
-    BASE_DIR / 'profiles' / 'static',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Supabase Storage uses the S3-compatible Django storage backend.
+# https://supabase.com/docs/guides/storage/s3/authentication
+if os.environ.get('SUPABASE_URL'):
+    for variable in ('SUPABASE_S3_ACCESS_KEY_ID', 'SUPABASE_S3_SECRET_ACCESS_KEY', 'SUPABASE_S3_REGION'):
+        if not os.environ.get(variable):
+            raise ImproperlyConfigured(f'{variable} is required for Supabase Storage.')
+
+    supabase_url = os.environ['SUPABASE_URL'].rstrip('/')
+    bucket_name = os.environ.get('SUPABASE_STORAGE_BUCKET', 'media')
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.s3.S3Storage',
+            'OPTIONS': {
+                'access_key': os.environ['SUPABASE_S3_ACCESS_KEY_ID'],
+                'secret_key': os.environ['SUPABASE_S3_SECRET_ACCESS_KEY'],
+                'region_name': os.environ['SUPABASE_S3_REGION'],
+                'bucket_name': bucket_name,
+                'endpoint_url': f'{supabase_url}/storage/v1/s3',
+                'custom_domain': f'{urlsplit(supabase_url).netloc}/storage/v1/object/public/{bucket_name}',
+                'file_overwrite': False,
+                'addressing_style': 'path',
+            },
+        },
+        'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'},
+    }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
