@@ -4,7 +4,13 @@ Development follows [Django with JavaScript and Ajax](https://learning.oreilly.c
 
 [Open the app](https://seng2045-a3.vercel.app/). Sign in at [/admin/](https://seng2045-a3.vercel.app/admin/) with a Django staff account, then open the home page.
 
-The app supports posts, likes, photo uploads, a carousel, and profile updates. Comments on posts are the optional feature.
+The app supports posts, likes, photo uploads, a carousel, and profile updates.
+
+## Optional additions
+
+- Added comments on post Details pages, showing the author, creation time, and comment text, with a comment count.
+- Added an avatar preview when choosing an image, which is uploaded only after clicking Save, and a link to the saved avatar that updates after saving.
+- Improved mobile layouts, form spacing, carousel image sizing, and button colours, with a consistent width for Like and Unlike.
 
 ## Run locally
 
