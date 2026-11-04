@@ -48,3 +48,13 @@
 .form-group label {
     margin-bottom: 0.5rem;
 }
+
+.profile-panel {
+    max-width: 880px;
+}
+
+.profile-panel #avatar-box img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+}
